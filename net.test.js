@@ -26,30 +26,47 @@ describe("Let'sGoToTheCinema happy path", () => {
     expect(actual).toContain(expected);
     });
     
-    test.only("Successful VIP-ticket purchase", async () => {
+    test("Successful VIP-ticket purchase", async () => {
       await clickElement(page, "a[class='page-nav__day page-nav__day_weekend']");
       await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='199']");
       await page.waitForSelector(".buying__info-start", {
             visable: true,});
       await clickElement(page, "div[class='buying-scheme__wrapper'] div:nth-child(1) span:nth-child(1)");
       await clickElement(page, ".acceptin-button");
+      await page.waitForSelector(".ticket__details.ticket__cost", {
+      visable: true,});
+    await clickElement(page, ".acceptin-button");
       const actual = await getText(page, ".ticket__details.ticket__cost");
       const expected = "1000";
       expect(actual).toContain(expected);
       }); 
 });
 
-test("Let'sGoToTheCinema sad path", async () => {
-  await clickElement(page, "a[class='page-nav__day page-nav__day_weekend']");
-  await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='199']");
-  await page.waitForSelector(".buying__info-start", {
-        visable: true,});
-  await clickElement(page, "div:nth-child(7) span:nth-child(8)");
-  
-  const btnDisabled = await page.$eval(".acceptin-button", button => button.disabled);
-  const actual = String(btnDisabled);
+test.only("Unsuccessful VIP-ticket purchase", async () => {
+    
+    await clickElement(page, "a[class='page-nav__day page-nav__day_weekend']");
+    await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='199']");
+    await page.waitForSelector(".buying__info-start", {
+          visable: true,});
+    await clickElement(page, "div[class='buying-scheme__wrapper'] div:nth-child(1) span:nth-child(10)");
+    await clickElement(page, ".acceptin-button");
+    await page.waitForSelector(".ticket__details.ticket__cost", {
+      visable: true,});
+    await clickElement(page, ".acceptin-button");
+    await page.waitForSelector(".ticket__check-title", {
+      visable: true,});
+      
+    await page.goto("https://qamid.tmweb.ru/client/index.php");
+    await clickElement(page, "a[class='page-nav__day page-nav__day_weekend']");
+    await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='199']");
+    await page.waitForSelector(".buying__info-start", {
+          visable: true,});
+      
+    const btnDisabledClass = await page.$eval("div[class='buying-scheme__wrapper'] div:nth-child(1) span:nth-child(10)", (button) => {
+    return button.getAttribute("class")});
+    const actual = btnDisabledClass;    
+    const expected = "buying-scheme__chair_taken";
+    expect(actual).toContain(expected);
 
-  const expected = "true";
-  expect(actual).toContain(expected);
-  }); 
+    }); 
 
