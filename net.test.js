@@ -14,7 +14,7 @@ afterEach(() => {
 
 describe("Let'sGoToTheCinema happy path", () => { 
 
-  test("Successful ticket purchase", async () => {
+  test.only("Successful ticket purchase", async () => {
     await clickElement(page, "a:nth-child(2)");
     await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='217']");
     await page.waitForSelector(".buying__info-title", {
@@ -55,7 +55,7 @@ test.only("Unsuccessful VIP-ticket purchase", async () => {
     await clickElement(page, ".acceptin-button");
     await page.waitForSelector(".ticket__check-title", {
       visable: true,});
-      
+
     await page.goto("https://qamid.tmweb.ru/client/index.php");
     await clickElement(page, "a[class='page-nav__day page-nav__day_weekend']");
     await clickElement(page, ".movie-seances__time[href='#'][data-seance-id='199']");
